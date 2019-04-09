@@ -20,8 +20,31 @@ def mergeTwochild(child1, child2):
     parentnode.rightobj = child2
     return parentnode
 
+def writeNormalFile(filename):
+    f = open(filename, "r")
+    w = open("conversion.txt", "w")
+    char = f.read(1)
+    while(char != ""):
+        w.write(format(ord(char), 'b')) 
+        char = f.read(1)
+    f.close()
+    w.close() 
+
+def writecompressedfile(filename, representaionDict):
+    f = open(filename, "r")
+    w = open("compressed.txt", "w")
+    char = f.read(1)
+    while(char != ""):
+        w.write(representaionDict[char])
+        char = f.read(1)
+    f.close()
+    w.close() 
+
 def main():
-    charCount = countDict('input.txt')
+    input_file = "input.txt"
+    charCount = countDict(input_file)
+    writeNormalFile(input_file)
+
     print(charCount)
     heap = minHeap()
     heap = insertCountinHeap(charCount, heap)
@@ -55,5 +78,5 @@ def main():
             runningnum = runningnum + "0"
             node = nonCharNode
 
-    print(representationDict)
+    writecompressedfile(input_file, representationDict)
 main()
