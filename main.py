@@ -35,6 +35,25 @@ def main():
         child2 = parent 
         parent = mergeTwochild(child1, child2)
 
-    print(parent.rightobj.val)
+    representationDict = {}
+    node = parent
+    runningnum = ""
+    while(node != None):
+        if(node.leftobj.isChar == 'T' and node.rightobj.isChar == "T"):
+            representationDict[node.leftobj.alphabet] = runningnum + "0"
+            representationDict[node.rightobj.alphabet] = runningnum + "1"
+            node = None 
+        else:
+            if(node.leftobj.isChar == "T"):
+                charNode = node.leftobj
+                nonCharNode = node.rightobj
+            else:
+                charNode = node.rightobj
+                nonCharNode = node.leftobj
+            
+            representationDict[charNode.alphabet] = runningnum + "1"
+            runningnum = runningnum + "0"
+            node = nonCharNode
 
+    print(representationDict)
 main()
