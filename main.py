@@ -2,6 +2,8 @@ from helper import countDict
 from helper import node
 from helper import minHeap
 
+import os
+
 #change file of words to a min heap 
 #extract two elements at first, make them child of a parent node and return paretn
 #while heap not empty, grab one from heap and returned parent node and keep going up, form a tree 
@@ -61,6 +63,15 @@ def Makebintochar(chartobin):
         newdict[chartobin[key]] = key
     return newdict
 
+def getCompressionStats(convertedFilename, compressedFilename):
+    inputfile = os.stat(convertedFilename)
+    conversionfilesize = inputfile.st_size
+
+    compressed = os.stat(compressedFilename)
+    compressedfilesize = compressed.st_size
+
+    return conversionfilesize,compressedfilesize
+
 def main():
     input_file_name = "input.txt"
     compressed_file_name = "compressed.txt"
@@ -105,4 +116,9 @@ def main():
 
     testResult = testSolution(input_file_name, compressed_file_name, Makebintochar(chartobin))
     print(testResult)
+
+    converted,compressed = getCompressionStats("conversion.txt","compressed.txt")
+    print("The file is compressed by a factor of "+ str(converted/compressed))
+
+    
 main()
