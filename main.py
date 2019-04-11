@@ -30,20 +30,43 @@ def writeNormalFile(filename):
     f.close()
     w.close() 
 
-def writecompressedfile(filename, representaionDict):
-    f = open(filename, "r")
-    w = open("compressed.txt", "w")
+def writecompressedfile(input_filename, compressed_file_name, representationDict):
+    f = open(input_filename, "r")
+    w = open(compressed_file_name, "w")
     char = f.read(1)
     while(char != ""):
-        w.write(representaionDict[char])
+        w.write(representationDict[char])
         char = f.read(1)
     f.close()
     w.close() 
 
+def testSolution(input_file, compressed, ReprDict):#compressed.txt, revert to ASCII, comp input
+    out = open(compressed, "r")
+    inputt= open(input_file, "r")
+
+    char = out.read(1)
+    while(char != ""):#char is 0
+        input_file_char = inputt.read(1) #a in input_file
+        while(char not in ReprDict):
+            char = char + out.read(1)
+
+        if(ReprDict[char] != input_file_char):
+            return "Failed"
+        char = out.read(1)
+    return "Passed"
+
+def Makebintochar(chartobin):
+    newdict = {}
+    for key in chartobin:#KEY = key, VALUE = chartobin[key]
+        newdict[chartobin[key]] = key
+    return newdict
+
 def main():
-    input_file = "input.txt"
-    charCount = countDict(input_file)
-    writeNormalFile(input_file)
+    input_file_name = "input.txt"
+    compressed_file_name = "compressed.txt"
+
+    charCount = countDict(input_file_name)
+    writeNormalFile(input_file_name)
 
     print(charCount)
     heap = minHeap()
@@ -58,13 +81,13 @@ def main():
         child2 = parent 
         parent = mergeTwochild(child1, child2)
 
-    representationDict = {}
+    chartobin = {}
     node = parent
     runningnum = ""
     while(node != None):
         if(node.leftobj.isChar == 'T' and node.rightobj.isChar == "T"):
-            representationDict[node.leftobj.alphabet] = runningnum + "0"
-            representationDict[node.rightobj.alphabet] = runningnum + "1"
+            chartobin[node.leftobj.alphabet] = runningnum + "0"
+            chartobin[node.rightobj.alphabet] = runningnum + "1"
             node = None 
         else:
             if(node.leftobj.isChar == "T"):
@@ -74,9 +97,12 @@ def main():
                 charNode = node.rightobj
                 nonCharNode = node.leftobj
             
-            representationDict[charNode.alphabet] = runningnum + "1"
+            chartobin[charNode.alphabet] = runningnum + "1"
             runningnum = runningnum + "0"
             node = nonCharNode
 
-    writecompressedfile(input_file, representationDict)
+    writecompressedfile(input_file_name, compressed_file_name, chartobin)
+
+    testResult = testSolution(input_file_name, compressed_file_name, Makebintochar(chartobin))
+    print(testResult)
 main()

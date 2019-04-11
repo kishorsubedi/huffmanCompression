@@ -1,5 +1,3 @@
-
-
 def countDict(filename):
     countDict = {}
     f = open(filename, "r")
